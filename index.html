@@ -163,7 +163,8 @@
 	function getCurrentDate() {
 		const date = new Date();
 		const hour = date.getHours();
-		return `${hour > 12 ? hour-12 : hour}:${date.getMinutes()}`
+		const minutes = date.getMinutes();
+		return `${hour > 12 ? hour-12 : hour}:${minutes < 10 ? `0${minutes}` : minutes}`
 	}
 	
 	function newBoard() {
