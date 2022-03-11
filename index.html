@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<title>Intro to Computer Programming Bingo</title>
+	</head>
+	<body>
+		<table id="bingo">
+		</table>
+	</body>
+</html>
+<style>
+	table {
+		width: 40vw;
+		border-collapse: collapse;
+		display: block;
+		margin: auto;
+	}
+	th,
+	td {
+		font-size: 12px;
+		width: 20%;
+		padding: 0 20px;
+		height: calc(40vw * 0.2);
+		border: 1px solid;
+		text-align: center;
+		font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+	}
+	.checked {
+		text-decoration: line-through;
+		background: color(srgb 1 0.581 0.581 / 0.589);	
+		transition: 0.1s all;
+	}
+</style>
+<script>
+	const free_square = "Presentation lags horribly"
+	const valid_options = [
+		'BASED',
+		'Dr. Hamilton talks about Africa',
+		'Asks someone to send an email to him',
+		'Dr. Hamilton calls someone the wrong name',
+		'Dr. Hamilton air quotes',
+		'Dr. Hamilton COVID coughs',
+		'Boomer analogies or phrases',
+		'Dr. Hamilton: “Professor Google”',
+		'Dr. Hamilton runs to the back of the class',
+		'Dr. Hamilton laughs',
+		'Dr. Hamilton reminisces about his time at Boeing',
+		'Apple Pencil dies or pops up with warning',
+		'Other major slander',
+		'Research project mentioned',
+		'Someone else must record',
+		'Points and calls on random student',
+		'Asks “don’t know don’t care” question',
+		'Covered in data structures or computer architectures',
+		'Dr. Hamilton: “my wife”',
+		'Dr. Hamilton forgets glove',
+		'Dr. Hamilton says something before hitting record intentionally',
+		'iPad dies or pops up with warning',
+		'Forgets someone’s name',
+		'Dr. Hamilton: “This is why we’re a C++ school”',
+		'“What does this line of code do?”'
+	]
+	$(document).ready(() => {
+		createBoard()
+	})
+	function toggleChecked(id) {
+		console.log(id)
+		$(`#${id}`).toggleClass('checked')
+	}
+	function createBoard() {
+		var options = valid_options;
+		var board = [];
+		for (var i = 0; i < 5; i++) {
+			board[i] = [];
+			for (var j = 0; j < 5; j++) {
+				const random_number = Math.floor(Math.random() * options.length);
+				board[i][j] = options[random_number]
+				options.splice(random_number, 1);
+			}
+		}
+		board[2][2] = free_square
+		var id = 0;
+		for (var row of board) {
+			var htmlRow = '<tr>'
+			for (var item of row) {
+				const free = item == free_square;
+				htmlRow += `<td id="item-${id}" onclick="toggleChecked('item-${id}')" ${free ? 'class="checked"' : ''}>${item}</td>`
+				id++;
+			}
+			htmlRow += `</tr>`
+			$('#bingo').append(htmlRow);
+		}
+	}
+</script>
