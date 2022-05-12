@@ -4,6 +4,8 @@
 
 A easy to use bingo client written in vanilla HTML5/JQuery. Every 5x5 board is generated randomly on the user's device. The game is entirely local, and data is saved in local storage.
 
+![Demo image](https://raw.githubusercontent.com/jacksonzamorano/bingo-app/master/sample.png)
+
 ## How to set up.
 
 1. Fork or clone this repository.
