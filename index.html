@@ -1,292 +1,320 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-		<title>Intro to Computer Programming Bingo</title>
-	</head>
-	<body>
-		<div class="actions">
-			<div class="action" onclick="newBoard()">
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path id="icon" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-				<p>New Board</p>
-				<span id="save-text" class="action-status">Not saved.</span>
-			</div>
-		</div>
-		<table id="bingo">
-		</table>
-		<a class="madeby" href="https://github.com/jacksonzamorano">Made with ❤️ by Jackson Zamorano</a>
-	</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <title>Bingo</title>
+    </head>
+    <body>
+        <div class="actions">
+            <select id="board-options" onchange="changeBoard()">
+                <option value="none"></option>
+            </select>
+            <div class="split"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" onclick="newBoard()">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path
+                    id="icon"
+                    d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                />
+            </svg>
+            <p onclick="newBoard()">New Board</p>
+            <span id="save-text" class="action-status">Not saved.</span>
+        </div>
+        <table id="bingo"></table>
+        <a class="madeby" href="https://github.com/jacksonzamorano">Made with ❤️ by Jackson Zamorano</a>
+    </body>
 </html>
 <style>
-	html, body {
-		font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-	}
-	table {
-		width: calc(100vh - 100px);
-		height: calc(100vh - 100px);
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		border-collapse: collapse;
-	}
-	th,
-	td {
-		font-size: 12px;
-		width: 20%;
-		height: 20%;
-		border: 1px solid;
-		vertical-align: middle;
-		overflow: hidden;
-	}
-	td div {
-		width: 100%;
-		height: 100%;
-		vertical-align: middle;
-		text-align: center;
-		font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-		overflow:hidden;
-		word-wrap:break-word; 
-		display: flex;
-	    align-items: center;
-		overflow: hidden;
-	}
-	td div p {
-		margin: 0 10px;
-		width: calc(100% - 20px);
-		text-align: center;
-		vertical-align: middle;
-		text-overflow: ellipsis;
-	}
-	.checked {
-		text-decoration: line-through;
-		background-color: #ff5e5e80;
-		transition: 0.1s all;
-	}
-	.actions {
-		position: absolute;
-		top: 20px;
-		right: 30px;
-		border-radius: 12px;
-		padding: 12px;
-		width: 180px;
-		height: 45px;
-		background-color: white;
-		z-index: 50;
-		filter: drop-shadow(2px 5px 10px color(srgb 0.728 0.728 0.728));
-	}
-	.actions > .action {
-		display: inline-block;
-		background-color: white;
-		float: right;
-		text-align: right;
-	}
-	.actions > .action > p {
-		display: inline-block;
-		vertical-align: middle;
-		margin: 0 10px;
-	}
-	.actions > .action > svg {
-		display: inline-block;
-		vertical-align: middle;
-	}
-	.actions > .action > .action-status {
-		display: block;
-		color: #7b7b7b;
-		margin-top: 4px;
-		text-align: right;
-		font-size: 12px;
-	}
-	.madeby {
-		color: #7b7b7b;
-		position: absolute;
-		bottom: 10px;
-		right: 20px;
-		font-size: 10px;
-	}
-	@media (prefers-color-scheme: dark) {
-		body, html {
-			color: white !important;
-			background: black !important;
-		}
-		.actions, .action {
-			background: black !important;
-		}
-		.actions {
-			filter: drop-shadow(2px 5px 10px color(srgb 0.228 0.228 0.228)) !important;
-		}
-		#icon {
-			color: white;
-			fill: white;
-		}
-	}
-	@media only screen and (max-width: 800px) {
-		table {
-			width: calc(100vw - 100px) !important;
-			height: calc(80vh - 100px) !important;
-		}
-		td div p {
-			font-size: 8px !important;
-		}
-		th,
-		td {
-			height: 20%;
-		}
-		.actions {
-			width: 100%;
-		}
-		.actions, .action {
-			top: 10px;
-			left: 0;
-			right: 0;
-			margin: 0 !important;
-			filter: none !important;
-			text-align: center !important;
-			float: none !important;
-		}
-		.madeby {
-			font-size: 12px;
-			text-align: center;
-			left: 0;
-			right: 0;
-		}
-	}
+    html,
+    body {
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+    table {
+        width: calc(100vh - 100px);
+        height: calc(100vh - 100px);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-collapse: collapse;
+    }
+    th,
+    td {
+        font-size: 12px;
+        width: 20%;
+        height: 20%;
+        border: 1px solid;
+        vertical-align: middle;
+        overflow: hidden;
+    }
+    td div {
+        width: 100%;
+        height: 100%;
+        vertical-align: middle;
+        text-align: center;
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        overflow: hidden;
+        word-wrap: break-word;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+    td div p {
+        margin: 0 10px;
+        width: calc(100% - 20px);
+        text-align: center;
+        vertical-align: middle;
+        text-overflow: ellipsis;
+    }
+    .checked {
+        text-decoration: line-through;
+        background-color: #ff5e5e80;
+        transition: 0.1s all;
+    }
+    .actions {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        border-radius: 12px;
+        padding: 12px;
+        width: 180px;
+        height: 80px;
+        background-color: white;
+        z-index: 50;
+        filter: drop-shadow(2px 5px 10px color(srgb 0.728 0.728 0.728));
+    }
+    .actions select {
+        margin-bottom: 10px;
+        width: 160px;
+    }
+    .actions {
+        text-align: right;
+    }
+    .actions > p {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 10px;
+    }
+    .actions > svg {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .actions > .action-status {
+        display: block;
+        color: #7b7b7b;
+        margin-top: 4px;
+        text-align: right;
+        font-size: 12px;
+    }
+    .madeby {
+        color: #7b7b7b;
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        font-size: 10px;
+    }
+    @media (prefers-color-scheme: dark) {
+        body,
+        html {
+            color: white !important;
+            background: black !important;
+        }
+        .actions,
+        .action {
+            background: black !important;
+        }
+        .actions {
+            filter: drop-shadow(2px 5px 10px color(srgb 0.228 0.228 0.228)) !important;
+        }
+        #icon {
+            color: white;
+            fill: white;
+        }
+    }
+    @media only screen and (max-width: 800px) {
+        table {
+            width: calc(100vw - 100px) !important;
+            height: calc(80vh - 100px) !important;
+        }
+        td div p {
+            font-size: 8px !important;
+        }
+        th,
+        td {
+            height: 20%;
+        }
+        .actions {
+            width: 100% !important;
+            padding: 0 !important;
+            top: 10px;
+            left: 0;
+            right: 0;
+            margin: 0 !important;
+            filter: none !important;
+            text-align: center !important;
+            float: none !important;
+        }
+        .actions > select {
+            margin: 10px auto;
+        }
+        .action-status {
+            text-align: center !important;
+        }
+        .madeby {
+            font-size: 12px;
+            text-align: center;
+            left: 0;
+            right: 0;
+        }
+        .split {
+            display: block;
+        }
+    }
 </style>
 <script>
-	const storage_prefix = 'cs-programming-bingo-'
-	const free_square = "Presentation lags horribly"
-	const valid_options = [
-		'BASED',
-		'Dr. Hamilton talks about Africa',
-		'Asks someone to send an email to him',
-		'Dr. Hamilton air quotes',
-		'Old analogies',
-		'RAM is cheap',
-		'Dr. Hamilton: “Professor Google”',
-		'Dr. Hamilton runs to the back of the class',
-		'Dr. Hamilton evil laughs',
-		'Dr. Hamilton reminisces about his time at Boeing',
-		'Apple Pencil dies or pops up with warning',
-		'Other major slander',
-		'Administration slander',
-		'Other programming language slander',
-		'Don\'t know don\'t care',
-		'Research project mentioned',
-		'Someone else must record',
-		'Points and calls on random student',
-		'Asks “don’t know don’t care” question',
-		'Covered in data structures or computer architectures',
-		'Dr. Hamilton: “my wife”',
-		'Dr. Hamilton forgets glove',
-		'Dr. Hamilton says something before hitting record intentionally',
-		'iPad dies or pops up with warning',
-		'Dr. Hamilton: “This is why we’re a C++ school”',
-		'“What does this line of code do?”',
-		'Josh skips ahead',
-		'When Revelation happens',
-		'Something is "of the devil"',
-		'Complains about not being able to co-opt computers from other students',
-		'Asks someone for a number',
-		'Slower than molassess in January',
-		'Magic',
-		'Dr. Hamilton exposes someone not paying attention'
-	]
-	$(document).ready(() => {
-		var board;
-		if (hasSavedBoard()) {
-			board = deserializeBoard();
-			const boardSave = window.localStorage.getItem(`${storage_prefix}board-ts`);
-			$(`#save-text`).text(`Using saved board from ${boardSave}.`);
-		} else {
-			board = generateBoard();
-		}
-		createBoard(board);
-	})
-	function toggleChecked(id) {
-		$(`#${id}`).toggleClass('checked')
-		const current_state = window.localStorage.getItem(`${storage_prefix}${id}`) == 'yes'
-		window.localStorage.setItem(`${storage_prefix}${id}`, current_state ? 'no' : 'yes')
-		window.localStorage.setItem(`${storage_prefix}board-ts`, getCurrentDate());
-		$(`#save-text`).text(`Saved ${getCurrentDate()}.`);
-	}
-	function getCurrentDate() {
-		const date = new Date();
-		const hour = date.getHours();
-		const minutes = date.getMinutes();
-		return `${hour > 12 ? hour-12 : hour}:${minutes < 10 ? `0${minutes}` : minutes}`
-	}
-	
-	function newBoard() {
-		window.localStorage.clear();
-		createBoard(generateBoard());
-	}
-	
-	function serializeBoard(board) {
-		var id = 0;
-		for (var row of board) {
-			for (var item of row) {
-				window.localStorage.setItem(`${storage_prefix}board-${id}`, item);
-				id++;
-			}
-		}
-		window.localStorage.setItem(`${storage_prefix}board-ts`, getCurrentDate());
-		$(`#save-text`).text(`Saved ${getCurrentDate()}.`);
-	}
-	
-	function deserializeBoard() {
-		var board = []
-		for (var i = 0; i < 5; i++) {
-			board[i] = []
-			for (var j = 0; j < 5; j++) {
-				const id = j + (i*5);
-				board[i][j] = window.localStorage.getItem(`${storage_prefix}board-${id}`);
-			}
-		}
-		return board;
-	}
-	
-	function hasSavedBoard() {
-		var isSaved = true
-		for (var i = 0; i < 5; i++) {
-			for (var j = 0; j < 5; j++) {
-				const id = j + (i*5);
-				if (window.localStorage.getItem(`${storage_prefix}board-${id}`) == null) { isSaved = false; }
-			}
-		}
-		return isSaved;
-	}
-	
-	function generateBoard() {
-		$('#bingo').children().remove()
-		var options = [].concat(valid_options);
-		var board = [];
-		for (var i = 0; i < 5; i++) {
-			board[i] = [];
-			for (var j = 0; j < 5; j++) {
-				const random_number = Math.floor(Math.random() * options.length);
-				board[i][j] = options[random_number]
-				options.splice(random_number, 1);
-			}
-		}
-		board[2][2] = free_square
-		serializeBoard(board);
-		return board;
-	}
-	
-	function createBoard(board) {
-		var id = 0;
-		for (var row of board) {
-			var htmlRow = '<tr>'
-			for (var item of row) {
-				const free = item == free_square;
-				const checked = (window.localStorage.getItem(`${storage_prefix}item-${id}`) == 'yes')
-				htmlRow += `<td id="item-${id}" onclick="toggleChecked('item-${id}')" ${free || checked ? 'class="checked"' : ''}><div><p>${item}</p></div></td>`
-				id++;
-			}
-			htmlRow += `</tr>`
-			$('#bingo').append(htmlRow);
-		}
-	}
+    var game_data
+    var selected_board
+    $(document).ready(() => {
+        downloadConfig(function () {
+            const last_board = window.localStorage.getItem('last-board')
+            console.log(last_board)
+            if (!!last_board) {
+                $('#board-options').val(last_board)
+                changeBoard(last_board)
+            }
+        })
+    })
+    function downloadConfig(done) {
+        $.get('/config.json', data => {
+            game_data = data
+            for (const b of data.boards) {
+                $('#board-options').append(`<option value="${b.key}">${b.name}</option>`)
+            }
+            done()
+        })
+    }
+    function toggleChecked(id) {
+        $(`#${id}`).toggleClass('checked')
+        const current_state = window.localStorage.getItem(`${selected_board.key}-${id}`) == 'yes'
+        window.localStorage.setItem(`${selected_board.key}-${id}`, current_state ? 'no' : 'yes')
+        window.localStorage.setItem(`${selected_board.key}-board-ts`, getCurrentDate())
+        $(`#save-text`).text(`Saved ${getCurrentDate()}.`)
+    }
+    function getCurrentDate() {
+        const date = new Date()
+        const hour = date.getHours()
+        const minutes = date.getMinutes()
+        return `${hour > 12 ? hour - 12 : hour}:${minutes < 10 ? `0${minutes}` : minutes}`
+    }
+
+    function changeBoard(key) {
+        if (!key) {
+            key = $('#board-options').val()
+        }
+        const newBoard = game_data.boards.find(a => a.key == key)
+        $('#bingo').children().remove()
+        if (!!newBoard) {
+            selected_board = newBoard
+            const board = hasSavedBoard() ? deserializeBoard() : generateBoard()
+            renderBoard(board)
+            const boardSave = window.localStorage.getItem(`${newBoard.key}-board-ts`)
+            $(`#save-text`).text(`Using saved board from ${boardSave}.`)
+            window.localStorage.setItem('last-board', key)
+            window.document.title = `${selected_board.name} | Bingo`
+        } else {
+            selected_board = null
+            $(`#save-text`).text(`Select a board.`)
+        }
+    }
+
+    function newBoard() {
+        if (!!selected_board) {
+            for (var i = 0; i < 25; i++) {
+                window.localStorage.removeItem(`${selected_board.key}-board-${i}`)
+                window.localStorage.removeItem(`${selected_board.key}-item-${i}`)
+            }
+            renderBoard(generateBoard())
+        }
+    }
+
+    function serializeBoard(board) {
+        var id = 0
+        for (var row of board) {
+            for (var item of row) {
+                window.localStorage.setItem(`${selected_board.key}-board-${id}`, item)
+                id++
+            }
+        }
+        window.localStorage.setItem(`${selected_board.key}-board-ts`, getCurrentDate())
+        $(`#save-text`).text(`Saved ${getCurrentDate()}.`)
+    }
+    function deserializeBoard() {
+        var board = []
+        for (var i = 0; i < 5; i++) {
+            board[i] = []
+            for (var j = 0; j < 5; j++) {
+                const id = j + i * 5
+                board[i][j] = window.localStorage.getItem(`${selected_board.key}-board-${id}`)
+            }
+        }
+        return board
+    }
+
+    function loadBoard() {
+        var board
+        if (hasSavedBoard()) {
+            board = deserializeBoard()
+        } else {
+            board = generateBoard()
+        }
+        renderBoard(board)
+    }
+    function hasSavedBoard() {
+        var isSaved = true
+        for (var i = 0; i < 5; i++) {
+            for (var j = 0; j < 5; j++) {
+                const id = j + i * 5
+                if (window.localStorage.getItem(`${selected_board.key}-board-${id}`) == null) {
+                    isSaved = false
+                }
+            }
+        }
+        return isSaved
+    }
+
+    function generateBoard() {
+        $('#bingo').children().remove()
+        var options = [].concat(selected_board.options)
+        var board = []
+        for (var i = 0; i < 5; i++) {
+            board[i] = []
+            for (var j = 0; j < 5; j++) {
+                const random_number = Math.floor(Math.random() * options.length)
+                board[i][j] = options[random_number]
+                options.splice(random_number, 1)
+            }
+        }
+        board[4][4] = board[2][2]
+        board[2][2] = selected_board.middle_square
+        serializeBoard(board)
+        return board
+    }
+    function renderBoard(board) {
+        var id = 0
+        for (var row of board) {
+            var htmlRow = '<tr>'
+            for (var item of row) {
+                const free = item == selected_board.middle_square
+                const checked = window.localStorage.getItem(`${selected_board.key}-item-${id}`) == 'yes'
+                htmlRow += `<td id="item-${id}" onclick="toggleChecked('item-${id}')" ${
+                    free || checked ? 'class="checked"' : ''
+                }><div><p>${item}</p></div></td>`
+                id++
+            }
+            htmlRow += `</tr>`
+            $('#bingo').append(htmlRow)
+        }
+    }
 </script>
